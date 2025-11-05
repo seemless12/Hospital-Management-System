@@ -15,7 +15,7 @@ choice = st.sidebar.selectbox("Navigation", menu)
 if choice == "Add Patient":
     st.subheader("➕ Add New Patient")
     name = st.text_input("Name")
-    age = st.number_input("Age", min_value=1, max_value=100, value=0)
+    age = st.number_input("Age", min_value=1, max_value=100, value=1)
     gender = st.selectbox("Gender", ["Select", "Male", "Female"])
     blood_type = st.text_input("Blood Type (e.g. A+, O-)")
     contact_phone = st.text_input("Contact Phone")
@@ -150,6 +150,7 @@ elif choice == "Delete Patient":
             st.success("✅ Patient deleted successfully!")
         else:
             st.error(f"❌ Error: {res.json().get('detail')}")
+
 
 
 
