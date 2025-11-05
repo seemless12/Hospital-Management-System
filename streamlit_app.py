@@ -15,39 +15,54 @@ choice = st.sidebar.selectbox("Navigation", menu)
 if choice == "Add Patient":
     st.subheader("➕ Add New Patient")
     name = st.text_input("Name")
-    age = st.number_input("Age", min_value=1, max_value=100)
-    gender = st.selectbox("Gender", ["Male", "Female"])
+    age = st.number_input("Age", min_value=1, max_value=100, value=0)
+    gender = st.selectbox("Gender", ["Select", "Male", "Female"])
     blood_type = st.text_input("Blood Type (e.g. A+, O-)")
     contact_phone = st.text_input("Contact Phone")
     contact_email = st.text_input("Contact Email (optional)")
     
-    # Doctor Assigned (auto "Dr " prefix)
-    doctor_assigned = st.text_input("Doctor Assigned", value="Dr ")
-    if not doctor_assigned.startswith("Dr "):
-        doctor_assigned = "Dr " + doctor_assigned.strip()
-    
+    # Doctor name auto prefix
+    doctor_assigned = st.text_input("Doctor Assigned (name only)")
+    if doctor_assigned and not doctor_assigned.lower().startswith("dr "):
+        doctor_assigned = f"Dr {doctor_assigned.strip()}"
+
     medical_history = st.text_area(
         "Medical History (comma separated)",
         placeholder="e.g. Diabetes, Hypertension"
     )
 
     if st.button("Create Patient"):
-        data = {
-            "name": name,
-            "age": age,
-            "gender": gender,
-            "blood_type": blood_type,
-            "contact_phone": contact_phone,
-            "contact_email": contact_email or None,
-            "Medical_History": [x.strip() for x in medical_history.split(",")] if medical_history else None,
-            "doctor_assigned": doctor_assigned
-        }
-
-        res = requests.post(f"{BASE_URL}/create_patients", json=data)
-        if res.status_code == 200:
-            st.success("✅ Patient added successfully!")
+        # --- FRONT-END VALIDATION ---
+        if not name.strip():
+            st.error("⚠️ Name cannot be empty.")
+        elif age <= 0:
+            st.error("⚠️ Please enter a valid age.")
+        elif gender == "Select":
+            st.error("⚠️ Please select a gender.")
+        elif not blood_type.strip():
+            st.error("⚠️ Blood type is required.")
+        elif not contact_phone.strip():
+            st.error("⚠️ Contact phone is required.")
+        elif not doctor_assigned.strip():
+            st.error("⚠️ Doctor name is required.")
         else:
-            st.error(f"❌ Error: {res.json().get('detail')}")
+            # Prepare data to send
+            data = {
+                "name": name,
+                "age": age,
+                "gender": gender,
+                "blood_type": blood_type,
+                "contact_phone": contact_phone,
+                "contact_email": contact_email or None,
+                "Medical_History": [x.strip() for x in medical_history.split(",")] if medical_history else None,
+                "doctor_assigned": doctor_assigned
+            }
+
+            res = requests.post(f"{BASE_URL}/create_patients", json=data)
+            if res.status_code == 200:
+                st.success("✅ Patient added successfully!")
+            else:
+                st.error(f"❌ Error: {res.json().get('detail')}")
 
 # --- View All Patients ---
 elif choice == "View All":
@@ -135,5 +150,6 @@ elif choice == "Delete Patient":
             st.success("✅ Patient deleted successfully!")
         else:
             st.error(f"❌ Error: {res.json().get('detail')}")
+
 
 
