@@ -221,7 +221,7 @@ elif choice == "Delete Patient":
             patient_id = int(patient_id_input.strip())  # convert to int
 
             try:
-                res = requests.delete(f"{BASE_URL}/delete_patient/{patient_id}")
+                res = requests.delete(f"{BASE_URL}/delete_patients/{patient_id}")
 
                 if res.status_code == 200:
                     st.success("✅ Patient deleted successfully!")
@@ -235,6 +235,7 @@ elif choice == "Delete Patient":
                         st.error("❌ Unexpected response from server.")
             except Exception as e:
                 st.error(f"⚠️ Request failed: {e}")
+
 
 
 
