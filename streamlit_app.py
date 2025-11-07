@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import re
 
-BASE_URL = "https://seenless-patient-fastapi-server.hf.space/"
+BASE_URL = "https://seenless-patient-fastapi-server.hf.space"
 
 st.set_page_config(page_title="Patient Management System", layout="centered")
 
@@ -225,6 +225,7 @@ elif choice == "Delete Patient":
                     st.error(f"❌ {res.json().get('detail', 'Not Found')}")
                 except:
                     st.error(f"❌ Server error: {res.text}")
+
 
 
 
