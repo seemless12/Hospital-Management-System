@@ -209,14 +209,14 @@ elif choice == "Update Patient":
 # --------------------------------------------------
 elif choice == "Delete Patient":
     st.subheader(" Delete Patient")
-    patient_id = st.text_input("Enter Patient ID to Delete")
+    patient_id = st.number_input("Enter Patient ID to Delete", min_value=1, step=1)
 
     if st.button("Delete"):
         if not patient_id.strip():
             st.warning(" Please enter a valid Patient ID.")
         else:
             patient_id = patient_id.strip()  # Clean input
-            res = requests.delete(f"{BASE_URL}/delete_patient/{patient_id}")
+            res = requests.delete(f"{BASE_URL}/delete_patients/{patient_id}")
             try:
                 if res.status_code == 200:
                     st.success(" Patient deleted successfully!")
@@ -226,6 +226,7 @@ elif choice == "Delete Patient":
                     st.error(f" {res.json().get('detail', 'Something went wrong')}")
             except Exception as e:
                 st.error(f" Request failed: {e}")
+
 
 
 
