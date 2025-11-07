@@ -6,7 +6,7 @@ BASE_URL = "https://seenless-patient-fastapi-server.hf.space/"
 
 st.set_page_config(page_title="Patient Management System", layout="centered")
 
-st.title("🏥 Patient Management Dashboard")
+st.title("Patient Management Dashboard")
 
 # Sidebar Navigation
 menu = ["Add Patient", "View All", "Sort Patients", "Update Patient", "Delete Patient"]
@@ -48,62 +48,62 @@ if choice == "Add Patient":
     if st.button("Create Patient"):
         valid = True
 
-        # ✅ Validate Name
+        #  Validate Name
         if not name.strip():
-            name_error.markdown('<p style="color:red;">⚠️ Name cannot be empty.</p>', unsafe_allow_html=True)
+            name_error.markdown('<p style="color:red;"> Name cannot be empty.</p>', unsafe_allow_html=True)
             valid = False
         elif not re.match(r'^[a-zA-Z\s]+$', name):
-            name_error.markdown('<p style="color:red;">⚠️ Invalid name — letters only.</p>', unsafe_allow_html=True)
+            name_error.markdown('<p style="color:red;"> Invalid name — letters only.</p>', unsafe_allow_html=True)
             valid = False
         else:
             name_error.empty()
 
-        # ✅ Validate Age
+        # Validate Age
         if not (1 <= age <= 100):
-            age_error.markdown('<p style="color:red;">⚠️ Age must be between 1 and 100.</p>', unsafe_allow_html=True)
+            age_error.markdown('<p style="color:red;"> Age must be between 1 and 100.</p>', unsafe_allow_html=True)
             valid = False
         else:
             age_error.empty()
 
-        # ✅ Validate Blood Type
+        # Validate Blood Type
         if not blood_type.strip():
-            blood_error.markdown('<p style="color:red;">⚠️ Blood type is required.</p>', unsafe_allow_html=True)
+            blood_error.markdown('<p style="color:red;"> Blood type is required.</p>', unsafe_allow_html=True)
             valid = False
         elif len(blood_type) > 3:
-            blood_error.markdown('<p style="color:red;">⚠️ Blood type too long (max 3 chars).</p>', unsafe_allow_html=True)
+            blood_error.markdown('<p style="color:red;"> Blood type too long (max 3 chars).</p>', unsafe_allow_html=True)
             valid = False
         else:
             blood_error.empty()
 
-        # ✅ Validate Phone
+        # Validate Phone
         if not contact_phone.strip():
-            phone_error.markdown('<p style="color:red;">⚠️ Contact phone is required.</p>', unsafe_allow_html=True)
+            phone_error.markdown('<p style="color:red;"> Contact phone is required.</p>', unsafe_allow_html=True)
             valid = False
         elif not re.match(r'^[0-9\-]{4,15}$', contact_phone):
-            phone_error.markdown('<p style="color:red;">⚠️ Invalid phone number format (4–15 digits).</p>', unsafe_allow_html=True)
+            phone_error.markdown('<p style="color:red;"> Invalid phone number format (4–15 digits).</p>', unsafe_allow_html=True)
             valid = False
         else:
             phone_error.empty()
 
-        # ✅ Validate Email (only if filled)
+        # Validate Email (only if filled)
         if contact_email:
             email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
             if not re.match(email_pattern, contact_email):
-                email_error.markdown('<p style="color:red;">⚠️ Invalid email address.</p>', unsafe_allow_html=True)
+                email_error.markdown('<p style="color:red;"> Invalid email address.</p>', unsafe_allow_html=True)
                 valid = False
             else:
                 email_error.empty()
         else:
             email_error.empty()
 
-        # ✅ Validate Doctor Assigned
+        # Validate Doctor Assigned
         if not doctor_assigned.strip():
-            doctor_error.markdown('<p style="color:red;">⚠️ Doctor name cannot be empty.</p>', unsafe_allow_html=True)
+            doctor_error.markdown('<p style="color:red;"> Doctor name cannot be empty.</p>', unsafe_allow_html=True)
             valid = False
         else:
             doctor_error.empty()
 
-        # ✅ Submit to backend only if all are valid
+        #  Submit to backend only if all are valid
         if valid:
             data = {
                 "name": name,
@@ -118,29 +118,29 @@ if choice == "Add Patient":
 
             res = requests.post(f"{BASE_URL}/create_patients", json=data)
             if res.status_code == 200:
-                st.success("✅ Patient added successfully!")
+                st.success(" Patient added successfully!")
             else:
                 try:
-                    st.error(f"❌ {res.json().get('detail', 'Server error')}")
+                    st.error(f" {res.json().get('detail', 'Server error')}")
                 except:
-                    st.error("❌ Something went wrong while creating patient.")
+                    st.error(" Something went wrong while creating patient.")
 
 
-# --------------------------------------------------
-# 🔹 VIEW ALL PATIENTS
-# --------------------------------------------------
+
+#  VIEW ALL PATIENTS
+
 elif choice == "View All":
-    st.subheader("📋 All Patients")
+    st.subheader("All Patients")
     res = requests.get(f"{BASE_URL}/patients")
     if res.status_code == 200:
         patients = res.json()
         st.dataframe(patients)
     else:
-        st.error("⚠️ Could not load patients.")
+        st.error(" Could not load patients.")
 
-# --------------------------------------------------
-# 🔹 SORT PATIENTS
-# --------------------------------------------------
+
+#  SORT PATIENTS
+
 elif choice == "Sort Patients":
     st.subheader("🔀 Sort Patients")
     sort_by = st.selectbox("Sort by", ["age", "gender", "blood_type"])
@@ -154,11 +154,11 @@ elif choice == "Sort Patients":
         else:
             st.error(res.json().get("detail", "Something went wrong."))
 
-# --------------------------------------------------
+
 # 🔹 UPDATE PATIENT
-# --------------------------------------------------
+
 elif choice == "Update Patient":
-    st.subheader("✏️ Update Patient Info")
+    st.subheader(" Update Patient Info")
     patient_id = st.text_input("Enter Patient ID")
 
     st.markdown("### Update Fields")
@@ -193,28 +193,29 @@ elif choice == "Update Patient":
             update_data["doctor_assigned"] = new_doctor
 
         if not update_data:
-            st.warning("⚠️ Please provide at least one field to update.")
+            st.warning(" Please provide at least one field to update.")
         else:
             try:
                 res = requests.put(f"{BASE_URL}/patients/{patient_id}", json=update_data)
                 if res.status_code == 200:
-                    st.success("✅ Patient updated successfully!")
+                    st.success(" Patient updated successfully!")
                 else:
-                    st.error(f"❌ {res.json().get('detail', 'Unknown error')}")
+                    st.error(f" {res.json().get('detail', 'Unknown error')}")
             except Exception as e:
-                st.error(f"⚠️ Request failed: {e}")
+                st.error(f" Request failed: {e}")
 
 # --------------------------------------------------
 # 🔹 DELETE PATIENT
 # --------------------------------------------------
 elif choice == "Delete Patient":
-    st.subheader("🗑️ Delete Patient")
+    st.subheader(" Delete Patient")
     patient_id = st.text_input("Enter Patient ID to Delete")
 
     if st.button("Delete"):
         res = requests.delete(f"{BASE_URL}/delete_patient/{patient_id}")
         if res.status_code == 200:
-            st.success("✅ Patient deleted successfully!")
+            st.success("Patient deleted successfully!")
         else:
-            st.error(f"❌ {res.json().get('detail', 'Something went wrong')}")
+            st.error(f" {res.json().get('detail', 'Something went wrong')}")
+
 
