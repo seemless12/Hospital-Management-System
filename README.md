@@ -32,8 +32,4 @@ This **FastAPI CRUD Web App** includes **form validation, inline error messages,
 
 ---
 
-## 🛠️ Installation & Setup Guide
-
-### 1️⃣ Clone this Repository
-```bash
 
