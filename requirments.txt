@@ -1,7 +1,12 @@
+# Backend
 fastapi
 uvicorn
 pydantic
+sqlite3-binary
+
+# Frontend
 streamlit
 requests
-email-validator
 
+# Optional (for advanced validation)
+email-validator
